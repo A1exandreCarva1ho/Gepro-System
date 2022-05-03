@@ -1,0 +1,53 @@
+public Alteradeiro(String campo0,String campo1,String campo2,String campo3,String campo4,String campo5) {
+        initComponents();
+
+        jLabel0.setText(campo0);
+        jLabel1.setText(campo1);
+        jLabel2.setText(campo2);
+        jLabel3.setText(campo3);
+        jLabel4.setText(campo4);
+        jLabel5.setText(campo5);
+        t1.setText(campo1);
+        t2.setText(campo2);
+        t3.setText(campo3);
+        t4.setText(campo4);
+
+        if(campo5.equals("interno")){
+        jRadioButton1.setSelected(true);
+        }
+        if(campo5.equals("terceirizado")){
+        jRadioButton2.setSelected(true);
+        }
+        jLabel0.setVisible(false);
+    }
+
+    
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+
+       try{
+           Class.forName("com.mysql.jdbc.Driver");
+           Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/proj_pratico","root",null);
+           String sql;
+           String id = jLabel0.getText();
+           String nomezinho = jLabel1.getText();
+           sql = "update projetista set nome=?,especialidade=?,telefone=?,email=?,contrato=? where id_projetista =" + "'"+id+"'";
+           PreparedStatement pstmt = conn.prepareStatement(sql);
+           pstmt.setString(1,t1.getText());
+           pstmt.setString(2,t2.getText());
+           pstmt.setString(3,t3.getText());
+           pstmt.setString(4,t4.getText());
+           String contratoproj="";
+           if (jRadioButton1.isSelected())
+               contratoproj = jRadioButton1.getText();
+           if (jRadioButton2.isSelected())
+               contratoproj = jRadioButton2.getText();
+           pstmt.setString(5,contratoproj);
+           pstmt.executeUpdate();
+           JOptionPane.showMessageDialog(rootPane, "dados do projetista "+nomezinho+" alterados com sucesso");
+           }
+           catch(ClassNotFoundException | SQLException e){
+           JOptionPane.showMessageDialog(null, e);
+       }
+       dispose();
+
+   }

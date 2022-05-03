@@ -1,0 +1,12 @@
+private void jButton1MouseReleased(java.awt.event.MouseEvent evt) {
+
+        String login = Login.getText();
+        String senha = new String(Senha.getPassword());
+        if (login.equals("Alexandre") && senha.equals("123456789")){
+           new Pesquisa().setVisible(true);
+            dispose();
+        }
+        else
+            JOptionPane.showMessageDialog(null, "usuário " + login + " ou senha estão inválidos");
+
+    }

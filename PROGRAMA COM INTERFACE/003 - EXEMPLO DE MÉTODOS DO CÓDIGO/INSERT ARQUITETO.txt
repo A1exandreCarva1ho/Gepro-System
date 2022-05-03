@@ -1,0 +1,20 @@
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        try{                                          // adicionar do CRUD
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/proj_pratico","root",null);
+            String sql;
+            sql = "insert into arquiteto (nome,telefone,email)values(?,?,?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,nomearq.getText());
+            pstmt.setString(2,telefonearq.getText());
+            pstmt.setString(3,emailarq.getText());
+            pstmt.executeUpdate();
+            nomearq.setText("");                    // limpa os campos todos
+            telefonearq.setText("");
+            emailarq.setText("");
+            JOptionPane.showMessageDialog(rootPane, "arquiteto adicionado!");
+        }catch(ClassNotFoundException | SQLException e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }

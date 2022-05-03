@@ -1,0 +1,306 @@
+public class User {
+
+        private int id_projetista;
+        private String nome;
+        private String especialidade;
+        private String telefone;
+        private String email;
+        private String contrato;
+
+        public User(int Id_Projetista, String Nome, String Especialidade, String Telefone, String Email, String Contrato) {
+            this.id_projetista = Id_Projetista;
+            this.nome = Nome;
+            this.especialidade = Especialidade;
+            this.telefone = Telefone;
+            this.email = Email;
+            this.contrato = Contrato;
+        }
+
+        public int getId_Projetista() {
+            return id_projetista;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public String getEspecialidade() {
+            return especialidade;
+        }
+
+        public String getTelefone() {
+            return telefone;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getContrato() {
+            return contrato;
+        }
+    }
+
+    public class User2 {
+
+        private int id_arquiteto;
+        private String nome;
+        private String telefone;
+        private String email;
+
+        public User2(int Id_Arquiteto, String Nome, String Telefone, String Email) {
+            this.id_arquiteto = Id_Arquiteto;
+            this.nome = Nome;
+            this.telefone = Telefone;
+            this.email = Email;
+        }
+
+        public int getId_Arquiteto() {
+            return id_arquiteto;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public String getTelefone() {
+            return telefone;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+    }
+
+    public ArrayList<User> ListUsers(String Pesq1, String Pesq2, String Pesq3, String Pesq4, String Pesq5) {
+        ArrayList<User> usersList = new ArrayList<User>();
+
+        Statement st;
+        ResultSet rs;
+
+        try {
+            Connection con = getConnection();
+            st = con.createStatement();
+            String searchQuery = "SELECT * FROM `projetista` where"
+                    + " (nome like '%" + Pesq1 + "%' OR nome Is Null)"
+                    + " AND (especialidade like '%" + Pesq2 + "%'OR especialidade Is NULL)"
+                    + " AND (telefone like '%" + Pesq3 + "%'OR telefone Is NULL)"
+                    + " AND (email like '%" + Pesq4 + "%'OR email Is NULL)"
+                    + " AND (contrato like '%" + Pesq5 + "%' OR contrato is NULL)";
+            rs = st.executeQuery(searchQuery);
+
+            User user;
+
+            while (rs.next()) {
+                user = new User(
+                        rs.getInt("id_projetista"),
+                        rs.getString("nome"),
+                        rs.getString("especialidade"),
+                        rs.getString("telefone"),
+                        rs.getString("email"),
+                        rs.getString("contrato")
+                );
+                usersList.add(user);
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return usersList;
+    }
+
+    public ArrayList<User2> ListUsers2(String Pesq1, String Pesq2, String Pesq3) {
+        ArrayList<User2> usersList2 = new ArrayList<User2>();
+        Statement st;
+        ResultSet rs;
+        try {
+            Connection con = getConnection();
+            st = con.createStatement();
+            String searchQuery = "SELECT * FROM `arquiteto` where"
+                    + " (nome like '%" + Pesq1 + "%' OR nome Is Null)"
+                    + " AND (telefone like '%" + Pesq2 + "%'OR telefone Is NULL)"
+                    + " AND (email like '%" + Pesq3+ "%'OR email Is NULL)";
+            rs = st.executeQuery(searchQuery);
+
+            User2 user2;
+
+            while (rs.next()) {
+                user2 = new User2(
+                        rs.getInt("id_arquiteto"),
+                        rs.getString("nome"),
+                        rs.getString("telefone"),
+                        rs.getString("email")
+
+                );
+                usersList2.add(user2);
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return usersList2;
+    }
+
+    public void remove() {
+
+        try {
+            int input = JOptionPane.showConfirmDialog(null, "você deseja prosseguir? Essa operação não pode ser desfeita");
+            if (input==0){
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/proj_pratico", "root", null);
+            String sql;
+            int row = PTABELA.getSelectedRow();
+            String cell = PTABELA.getModel().getValueAt(row, 0).toString();
+            String nominho = PTABELA.getModel().getValueAt(row, 1).toString();
+
+            sql = "delete from projetista where id_projetista = " + "'" + cell + "'";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(rootPane, "projetista " + nominho + " deletado com sucesso");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }
+
+    public void remove2() {
+
+        try {
+            int input = JOptionPane.showConfirmDialog(null, "você deseja prosseguir? Essa operação não pode ser desfeita");
+            if (input==0){
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/proj_pratico", "root", null);
+            String sql;
+            int row = PTABELA2.getSelectedRow();
+            String cell = PTABELA2.getModel().getValueAt(row, 0).toString();
+            String nominho = PTABELA2.getModel().getValueAt(row, 1).toString();
+
+            sql = "delete from arquiteto where id_arquiteto = " + "'" + cell + "'";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(rootPane, "arquiteto " + nominho + " deletado com sucesso");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }
+    public void pesquisadeiro() {
+        String contratoproj = "";
+        if (jRadioButton1.isSelected()) {
+            contratoproj = jRadioButton1.getText();
+        }
+        if (jRadioButton2.isSelected()) {
+            contratoproj = jRadioButton2.getText();
+        }
+
+        ArrayList<User> users = ListUsers(nome.getText(), especialidade.getText(), telefone.getText(), email.getText(), contratoproj);
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "NOME", "ESPECIALIDADE", "TELEFONE", "EMAIL", "CONTRATO"});
+        Object[] row = new Object[6];
+
+        for (int i = 0; i < users.size(); i++) {
+            row[0] = users.get(i).getId_Projetista();
+            row[1] = users.get(i).getNome();
+            row[2] = users.get(i).getEspecialidade();
+            row[3] = users.get(i).getTelefone();
+            row[4] = users.get(i).getEmail();
+            row[5] = users.get(i).getContrato();
+
+            model.addRow(row);
+        }
+        PTABELA.setModel(model);
+    }
+
+    public void pesquisadeiro2() {
+
+        ArrayList<User2> users2 = ListUsers2(nome2.getText(),telefone2.getText(),email2.getText());
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "NOME", "TELEFONE", "E-MAIL"});
+        Object[] row = new Object[4];
+
+        for (int i = 0; i < users2.size(); i++) {
+            row[0] = users2.get(i).getId_Arquiteto();
+            row[1] = users2.get(i).getNome();
+            row[2] = users2.get(i).getTelefone();
+            row[3] = users2.get(i).getEmail();
+            model.addRow(row);
+        }
+        PTABELA2.setModel(model);
+    }
+
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        pesquisadeiro();
+    }
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {
+        try{
+            remove();
+            pesquisadeiro();
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            JOptionPane.showMessageDialog(null, "Clique em pesquisar para encontrar registros e depois selecione um registro para remover");
+        }
+    }
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {
+
+        try{
+            int row = PTABELA.getSelectedRow();
+            String campo0 = PTABELA.getModel().getValueAt(row, 0).toString();
+            String campo1 = PTABELA.getModel().getValueAt(row, 1).toString();
+            String campo2 = PTABELA.getModel().getValueAt(row, 2).toString();
+            String campo3 = PTABELA.getModel().getValueAt(row, 3).toString();
+            String campo4 = PTABELA.getModel().getValueAt(row, 4).toString();
+            String campo5 = PTABELA.getModel().getValueAt(row, 5).toString();
+            new Alteradeiro(campo0, campo1, campo2, campo3, campo4, campo5).setVisible(true);
+            pesquisadeiro();
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            JOptionPane.showMessageDialog(null, "Clique em pesquisar para encontrar registros e depois selecione um registro para alterar");
+        }
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+         new AdicaoProj().setVisible(true);
+        dispose();
+    }
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
+        new AdicaoArq().setVisible(true);
+        dispose();
+    }
+
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {
+
+        try{
+            int row = PTABELA2.getSelectedRow();
+            String campo0 = PTABELA2.getModel().getValueAt(row, 0).toString();
+            String campo1 = PTABELA2.getModel().getValueAt(row, 1).toString();
+            String campo2 = PTABELA2.getModel().getValueAt(row, 2).toString();
+            String campo3 = PTABELA2.getModel().getValueAt(row, 3).toString();
+            new Alteradeiroarq(campo0, campo1, campo2, campo3).setVisible(true);
+            pesquisadeiro2();
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            JOptionPane.showMessageDialog(null, "Clique em pesquisar para encontrar registros e depois selecione um registro para alterar");
+        }
+    }
+
+    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {
+       try{
+            remove2();
+            pesquisadeiro2();
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            JOptionPane.showMessageDialog(null, "Clique em pesquisar para encontrar registros e depois selecione um registro para remover");
+        }
+    }
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+           pesquisadeiro2();
+        }

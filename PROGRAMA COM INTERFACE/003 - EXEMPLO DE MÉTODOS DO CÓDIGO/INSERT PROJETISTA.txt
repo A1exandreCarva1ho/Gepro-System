@@ -1,0 +1,34 @@
+﻿private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+     try{                                          // adicionar do CRUD
+         Class.forName("com.mysql.jdbc.Driver");
+         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/proj_pratico","root",null);
+         String sql;
+         sql = "insert into projetista (nome,especialidade,telefone,email,contrato)values(?,?,?,?,?)";
+         PreparedStatement pstmt = conn.prepareStatement(sql);
+         pstmt.setString(1,nomeproj.getText());
+         pstmt.setString(2,especialidadeproj.getText());
+         pstmt.setString(3,telefoneproj.getText());
+         pstmt.setString(4,emailproj.getText());
+
+         String contratoproj="";
+         if (jRadioButton1.isSelected())
+         contratoproj = jRadioButton1.getText();
+         if (jRadioButton2.isSelected())
+         contratoproj = jRadioButton2.getText();
+
+         pstmt.setString(5,contratoproj);
+
+         pstmt.executeUpdate();
+
+         nomeproj.setText("");                    // limpa os campos todos
+         especialidadeproj.setText("");
+         telefoneproj.setText("");
+         emailproj.setText("");
+         buttonGroup1.clearSelection();
+
+         JOptionPane.showMessageDialog(rootPane, "projetista adicionado!");
+     }catch(ClassNotFoundException | SQLException e){
+         JOptionPane.showMessageDialog(null, "você deve escolher o tipo de contrato");
+     }
+
+ }
